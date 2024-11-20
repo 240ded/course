@@ -30,14 +30,21 @@ public class MainController {
             description = "Получает DTO кота и билдером собирает и сохраняет сущность в базу"
     )
     @PostMapping("/api/add")
-    public void addCat(@RequestBody CatDTO catDTO) {
-        log.info(
-                "New row: " + catRepository.save(
-                        Cat.builder()
-                        .name(catDTO.getName())
+    public Cat addCat(@RequestBody CatDTO catDTO) {
+//        log.info(
+//                "New row: " + catRepository.save(
+//                        Cat.builder()
+//                        .name(catDTO.getName())
+//                        .age(catDTO.getAge())
+//                        .weight(catDTO.getWeight())
+//                        .build())
+//        );
+        return catRepository.save(
+                Cat.builder()
                         .age(catDTO.getAge())
                         .weight(catDTO.getWeight())
-                        .build())
+                        .name(catDTO.getName())
+                        .build()
         );
     }
 
@@ -57,8 +64,11 @@ public class MainController {
         catRepository.deleteById(id);
     }
 
-    @PutMapping("/api/{id}")
-    public void updateCat(@RequestBody Cat cat) {
-        catRepository.save(cat);
+    @PutMapping("/api/add")
+    public String changeCat(@RequestBody Cat cat) {
+        if (!catRepository.existsById(cat.getId())) {
+            return "No such row";
+        }
+        return catRepository.save(cat).toString();
     }
 }
